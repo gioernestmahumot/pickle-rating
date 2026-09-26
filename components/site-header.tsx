@@ -25,10 +25,10 @@ export async function SiteHeader() {
   return (
     <>
       <header className="sticky top-0 z-30 bg-brand text-brand-ink">
-        <div className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-4 md:h-[72px] md:px-8">
+        <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4 md:h-[72px] md:gap-6 md:px-8">
           <Link href="/" className="flex items-center gap-2.5 text-brand-ink">
             <Logo />
-            <span className="font-display text-xl font-extrabold tracking-tight">Pickle Rating</span>
+            <span className="font-display text-lg font-extrabold tracking-tight whitespace-nowrap md:text-xl">Pickle Rating</span>
           </Link>
           <HeaderNav pendingCount={pendingCount} />
           <div className="ml-auto flex items-center gap-2 md:gap-3">
@@ -45,8 +45,8 @@ export async function SiteHeader() {
               </>
             ) : (
               <>
-                <Link href="/login" className="rounded-xl px-3 py-2 text-sm font-semibold text-brand-ink-2 hover:text-brand-ink">Sign in</Link>
-                <Link href="/signup" className="btn-accent">Join</Link>
+                <Link href="/login" className="btn-accent md:btn md:bg-transparent md:text-brand-ink-2 md:hover:text-brand-ink">Sign in</Link>
+                <Link href="/signup" className="btn-accent hidden md:inline-flex">Join</Link>
               </>
             )}
           </div>

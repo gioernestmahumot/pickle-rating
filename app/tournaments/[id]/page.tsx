@@ -98,7 +98,7 @@ export default async function TournamentPage({ params }: PageProps<"/tournaments
       {tournament.description && <p className="max-w-3xl rounded-2xl bg-surface-2 px-5 py-4 whitespace-pre-line text-ink-2">{tournament.description}</p>}
 
       {tournament.status === "registration" && (
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
           <section className="card">
             <h2 className="section-title">Registered {unit}</h2>
             {entries.length === 0 ? <p className="muted mt-2">No one has registered yet.</p> : (
@@ -128,7 +128,7 @@ export default async function TournamentPage({ params }: PageProps<"/tournaments
 
       {slots.length > 0 && (
         <section className="overflow-x-auto pb-2">
-          <div className="grid min-w-max auto-cols-[260px] grid-flow-col gap-6">
+          <div className="grid min-w-max auto-cols-[240px] grid-flow-col gap-6">
             {Array.from({ length: rounds }, (_, i) => i + 1).map((round) => (
               <div key={round} className="flex flex-col gap-3">
                 <h2 className="text-xs font-bold tracking-wide text-ink-3 uppercase">{roundName(round, rounds)}</h2>

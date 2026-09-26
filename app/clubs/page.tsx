@@ -33,7 +33,7 @@ export default async function ClubsPage({ searchParams }: PageProps<"/clubs">) {
         </div>
         <button type="submit" className="btn-secondary">Show</button>
       </form>
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
         <section className="grid gap-3 sm:grid-cols-2">
           {clubs.length === 0 && <p className="muted">No clubs here yet. Start the first one.</p>}
           {clubs.map((club) => (

@@ -86,7 +86,7 @@ export default async function PlayerPage({ params, searchParams }: PageProps<"/p
         {isMe && <Link href="/profile" className="mt-4 inline-block text-sm font-semibold text-brand-ink-2 md:hidden">Edit profile</Link>}
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-3">
             {FORMATS.map((format, index) => {

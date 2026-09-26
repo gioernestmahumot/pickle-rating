@@ -52,7 +52,7 @@ export default async function ClubPage({ params, searchParams }: PageProps<"/clu
         </div>
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
         <section className="overflow-hidden rounded-2xl border border-line bg-surface">
           <div className="flex items-center justify-between gap-3 px-5 pt-4">
             <h2 className="section-title">Club rankings</h2>

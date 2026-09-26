@@ -43,7 +43,7 @@ export function winRate(wins: number, played: number): string {
 }
 
 export function formatDelta(delta: number): string {
-  return delta > 0 ? `+${delta}` : `${delta}`;
+  return delta > 0 ? `+${delta}` : delta < 0 ? `−${Math.abs(delta)}` : "0";
 }
 
 export function formatPercent(value: number): string {

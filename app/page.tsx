@@ -21,6 +21,30 @@ function rankingsHref(params: { format: Format; region: string | null; city: str
   return query ? `/?${query}` : "/";
 }
 
+function Filters({ idPrefix, format, region, city, q }: { idPrefix: string; format: Format; region: string | null; city: string; q: string }) {
+  return (
+    <form className="grid gap-3 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end" action="/">
+      {format !== "singles" && <input type="hidden" name="format" value={format} />}
+      <div>
+        <label className="label" htmlFor={`${idPrefix}region`}>Region</label>
+        <select id={`${idPrefix}region`} name="region" className="input" defaultValue={region ?? ""}>
+          <option value="">All of the Philippines</option>
+          {REGIONS.map((option) => <option key={option.code} value={option.code}>{option.name}</option>)}
+        </select>
+      </div>
+      <div>
+        <label className="label" htmlFor={`${idPrefix}city`}>City</label>
+        <input id={`${idPrefix}city`} name="city" className="input" placeholder="Any city" defaultValue={city} />
+      </div>
+      <div>
+        <label className="label" htmlFor={`${idPrefix}q`}>Find a player</label>
+        <input id={`${idPrefix}q`} name="q" className="input" placeholder="Name" defaultValue={q} />
+      </div>
+      <button type="submit" className="btn-secondary">Show</button>
+    </form>
+  );
+}
+
 export default async function RankingsPage({ searchParams }: PageProps<"/">) {
   const params = await searchParams;
   const format = parseFormat(one(params.format));
@@ -86,27 +110,14 @@ export default async function RankingsPage({ searchParams }: PageProps<"/">) {
         ))}
       </div>
 
-      <form className="grid gap-3 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end" action="/">
-        {format !== "singles" && <input type="hidden" name="format" value={format} />}
-        <div>
-          <label className="label" htmlFor="region">Region</label>
-          <select id="region" name="region" className="input" defaultValue={region ?? ""}>
-            <option value="">All of the Philippines</option>
-            {REGIONS.map((option) => <option key={option.code} value={option.code}>{option.name}</option>)}
-          </select>
-        </div>
-        <div>
-          <label className="label" htmlFor="city">City</label>
-          <input id="city" name="city" className="input" placeholder="Any city" defaultValue={city} />
-        </div>
-        <div>
-          <label className="label" htmlFor="q">Find a player</label>
-          <input id="q" name="q" className="input" placeholder="Name" defaultValue={q} />
-        </div>
-        <button type="submit" className="btn-secondary">Show</button>
-      </form>
+      {/* Phones get the quick chips above; the full filters fold away. */}
+      <details className="rounded-2xl border border-line bg-surface md:hidden">
+        <summary className="flex min-h-11 cursor-pointer items-center px-4 text-sm font-semibold text-link">More filters</summary>
+        <div className="border-t border-line p-4"><Filters idPrefix="m-" format={format} region={region} city={city} q={q} /></div>
+      </details>
+      <div className="hidden md:block"><Filters idPrefix="d-" format={format} region={region} city={city} q={q} /></div>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
         <section aria-label="Leaderboard" className="overflow-hidden rounded-2xl border border-line bg-surface">
           <div className="hidden grid-cols-[64px_minmax(0,1fr)_110px_90px_80px] border-b border-line px-5 py-3 text-xs font-bold tracking-wide text-ink-3 uppercase sm:grid">
             <span>Rank</span><span>Player</span><span className="text-right">Rating</span><span className="text-right">W–L</span><span className="text-right">Win %</span>
