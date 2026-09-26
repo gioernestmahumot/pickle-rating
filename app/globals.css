@@ -1,26 +1,148 @@
 @import "tailwindcss";
 
+/* Night mode: the `dark` class on <html>, set before paint by the script in
+   app/layout.tsx (the saved choice, else the phone's own setting). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Manila Bay Sunset. Components use these names, never raw hex, so night mode
+   is only a second set of values below. Mirrors the approved design canvas. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --ground: #fbf7f1;
+  --surface: #ffffff;
+  --surface-2: #efe8de;
+  --ink: #1d1b19;
+  --ink-2: #5a5550;
+  --ink-3: #655e57;
+  --ink-4: #978e86;
+  --line: #ebe4da;
+  --line-strong: #d9d0c4;
+  --brand: #1b2a4a;
+  --brand-2: #2c3d63;
+  --brand-ink: #ffffff;
+  --brand-ink-2: #d6dcea;
+  --accent: #ff8a3d;
+  --accent-ink: #1b2a4a;
+  --link: #b8500d;
+  --primary: #b8500d;
+  --primary-ink: #ffffff;
+  --tint: #fff1e6;
+  --good: #2f7d4f;
+  --good-tint: #e8f4ec;
+  --bad: #b42318;
+  --bad-tint: #fdecea;
+  --warn: #7a4d00;
+  --warn-tint: #fff1c7;
+  --qr-dark: #1b2a4a;
+}
+
+.dark {
+  color-scheme: dark;
+  --ground: #0e1422;
+  --surface: #182135;
+  --surface-2: #1f2940;
+  --ink: #f2ece3;
+  --ink-2: #bcb4a9;
+  --ink-3: #a79f95;
+  --ink-4: #7d879b;
+  --line: #2a3550;
+  --line-strong: #3a4766;
+  --brand: #22335a;
+  --brand-2: #33466f;
+  --brand-ink: #ffffff;
+  --brand-ink-2: #c9d3ea;
+  --accent: #ff9a52;
+  --accent-ink: #1b2a4a;
+  --link: #ffa766;
+  --primary: #ff9a52;
+  --primary-ink: #1b2a4a;
+  --tint: #2b241f;
+  --good: #5cc98a;
+  --good-tint: #15301f;
+  --bad: #ff7b6b;
+  --bad-tint: #3a1f24;
+  --warn: #ffd27a;
+  --warn-tint: #3b3016;
+  --qr-dark: #1b2a4a;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-ink-4: var(--ink-4);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-brand: var(--brand);
+  --color-brand-2: var(--brand-2);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-ink-2: var(--brand-ink-2);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-link: var(--link);
+  --color-primary: var(--primary);
+  --color-primary-ink: var(--primary-ink);
+  --color-tint: var(--tint);
+  --color-good: var(--good);
+  --color-good-tint: var(--good-tint);
+  --color-bad: var(--bad);
+  --color-bad-tint: var(--bad-tint);
+  --color-warn: var(--warn);
+  --color-warn-tint: var(--warn-tint);
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-figtree), ui-sans-serif, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--ground);
+  color: var(--ink);
+}
+
+@utility btn {
+  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-line bg-surface p-5;
+  }
+  .btn-primary {
+    @apply btn bg-primary text-primary-ink hover:brightness-110;
+  }
+  .btn-accent {
+    @apply btn bg-accent text-accent-ink hover:brightness-105;
+  }
+  .btn-secondary {
+    @apply btn border border-line-strong bg-surface text-ink hover:bg-surface-2;
+  }
+  .btn-danger {
+    @apply btn border border-line-strong bg-surface text-bad hover:bg-bad-tint;
+  }
+  .input {
+    @apply min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3 text-[15px] text-ink outline-none placeholder:text-ink-4 focus:border-link focus:ring-2 focus:ring-link/25;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-semibold text-ink-2;
+  }
+  .eyebrow {
+    @apply text-xs font-bold tracking-[0.1em] text-link uppercase;
+  }
+  .page-title {
+    @apply font-display text-3xl font-extrabold tracking-tight text-ink sm:text-4xl;
+  }
+  .section-title {
+    @apply text-base font-bold text-ink;
+  }
+  .muted {
+    @apply text-sm text-ink-3;
+  }
+  .link {
+    @apply font-semibold text-link underline-offset-2 hover:underline;
+  }
+  .num {
+    @apply font-display font-extrabold tabular-nums;
+  }
 }
