@@ -1,0 +1,57 @@
+# Nightly encrypted backup of the Pickle Rating database (see docs/BACKUP.md).
+# This repository is public, so the dump is encrypted before it is uploaded:
+# without BACKUP_PASSPHRASE the artifact is unreadable.
+name: Database backup
+
+on:
+  schedule:
+    - cron: "0 18 * * *" # 02:00 Philippine time
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: database-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Dump roles, schema and data
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "$DB_URL" ]; then echo "::error::Add the SUPABASE_DB_URL repository secret (docs/BACKUP.md)."; exit 1; fi
+          mkdir backup
+          supabase db dump --db-url "$DB_URL" -f backup/roles.sql --role-only
+          supabase db dump --db-url "$DB_URL" -f backup/schema.sql
+          supabase db dump --db-url "$DB_URL" -f backup/data.sql --use-copy --data-only
+          ls -l backup
+
+      - name: Encrypt
+        env:
+          PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          if [ "${#PASSPHRASE}" -lt 16 ]; then echo "::error::Add a BACKUP_PASSPHRASE secret of at least 16 characters (docs/BACKUP.md)."; exit 1; fi
+          name="pickle-rating-$(TZ=Asia/Manila date +%Y-%m-%d)"
+          tar -czf "$name.tar.gz" backup
+          printf '%s' "$PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 \
+            --symmetric --cipher-algo AES256 --output "$name.tar.gz.gpg" "$name.tar.gz"
+          rm -rf backup "$name.tar.gz"
+          echo "BACKUP_NAME=$name" >> "$GITHUB_ENV"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.BACKUP_NAME }}
+          path: ${{ env.BACKUP_NAME }}.tar.gz.gpg
+          retention-days: 30
+          if-no-files-found: error

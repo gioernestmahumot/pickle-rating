@@ -58,6 +58,10 @@ Elo, calculated in the database (`supabase/migrations`, `apply_match_rating`), s
 3. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` under Environment Variables, then deploy.
 4. Put the Vercel address into Supabase's Site URL and Redirect URLs (step 3 above).
 
+## Backups
+
+A nightly GitHub Actions job saves an encrypted copy of the whole database for 30 days. Setup (two repository secrets) and how to open or restore a backup: [docs/BACKUP.md](docs/BACKUP.md).
+
 ## Tests
 
 ```bash
