@@ -100,7 +100,11 @@ export default async function PlayerPage({ params, searchParams }: PageProps<"/p
               const rank = ranks[index];
               return (
                 <div key={format} className="card flex flex-col gap-1 p-4">
-                  <p className="text-xs font-bold tracking-wide text-ink-3 uppercase">{formatLabel(format)}</p>
+                  <p className="flex items-center justify-between text-xs font-bold tracking-wide text-ink-3 uppercase">
+                    {formatLabel(format)}
+                    <Link href="/help?open=calculated#calculated" aria-label="How ratings work" title="How ratings work"
+                      className="grid size-6 place-items-center rounded-full border border-line-strong text-[11px] normal-case text-ink-3 hover:text-link">?</Link>
+                  </p>
                   <p className="num text-4xl leading-none">
                     {profile[`${format}_rating`]}
                     {played > 0 && isProvisional(played) && <abbr title="Provisional: fewer than 5 rated matches" className="ml-1 align-top text-sm text-ink-4 no-underline">P</abbr>}

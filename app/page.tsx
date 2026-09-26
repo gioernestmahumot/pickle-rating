@@ -157,7 +157,9 @@ export default async function RankingsPage({ searchParams }: PageProps<"/">) {
               })}
             </ol>
           )}
-          <p className="border-t border-line px-5 py-3 text-xs text-ink-3">P = provisional (fewer than 5 rated matches). Ratings start at 1500.</p>
+          <p className="border-t border-line px-5 py-3 text-xs text-ink-3">
+            P = provisional (fewer than 5 rated matches). Ratings start at 1500. <Link href="/help?open=calculated#calculated" className="font-semibold text-link hover:underline">How ratings work</Link>
+          </p>
         </section>
 
         <aside className="space-y-5">

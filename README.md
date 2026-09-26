@@ -11,6 +11,7 @@ Pickleball rankings for the Philippines. Ratings come from confirmed matches, so
 - **Tournaments**: single-elimination brackets seeded by rating, with byes; the organizer enters results and winners move on automatically.
 - **QR check-in**: scan a player's code to add them to a match, and scan a match's code to open it and confirm the score.
 - **Day and night mode**: follows the phone's setting, with a switch in the header.
+- **Help & FAQ** (`/help`): 21 answers in 6 topics with search; the content lives in `lib/faq.ts`, so update it there if a rule changes.
 - **Feedback**: signed-in players send suggestions, app problems or score issues (up to 5 a day); admins read them under Admin → Feedback and mark them seen or done. Set `NEXT_PUBLIC_CONTACT_URL` to show your Facebook page (or another link) in the footer.
 
 ## How ratings work

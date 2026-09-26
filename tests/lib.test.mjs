@@ -54,3 +54,10 @@ test("check-in QR codes resolve to a player id", () => {
   assert.equal(playerIdFromCode("https://example.com/matches/new?add=not-an-id"), null);
   assert.equal(playerIdFromCode("hello"), null);
 });
+
+test("FAQ ids are unique so links like /help#provisional land on one question", async () => {
+  const { FAQ } = await import("../lib/faq.ts");
+  const ids = [...FAQ.map((s) => s.id), ...FAQ.flatMap((s) => s.items.map((i) => i.id))];
+  assert.equal(new Set(ids).size, ids.length);
+  assert.ok(FAQ.flatMap((s) => s.items).some((i) => i.id === "calculated"), "profile and rankings link to #calculated");
+});
