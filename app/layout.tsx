@@ -9,9 +9,16 @@ import "./globals.css";
 const figtree = Figtree({ variable: "--font-figtree", subsets: ["latin"] });
 const bricolage = Bricolage_Grotesque({ variable: "--font-bricolage", subsets: ["latin"], weight: ["600", "800"] });
 
+// Share previews need absolute image links; Vercel provides the production domain.
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: { default: "Pickle Rating: Philippine pickleball rankings", template: "%s · Pickle Rating" },
   description: "Pickleball ratings for the Philippines, calculated from confirmed matches. No DUPR needed.",
+  appleWebApp: { title: "Pickle Rating" },
 };
 
 export const viewport: Viewport = {
