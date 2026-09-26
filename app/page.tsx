@@ -62,14 +62,14 @@ export default async function RankingsPage({ searchParams }: PageProps<"/">) {
   if (region) query = query.eq("region", region);
   // ILIKE without wildcards is a case-insensitive exact match.
   if (city) query = query.ilike("city", city.replace(/[\\%_]/g, (char) => `\\${char}`));
-  const { data } = await query;
-  const ranked = ((data ?? []) as Player[]).map((row, index) => ({ ...row, rank: index + 1 }));
-  const rows = (q ? ranked.filter((row) => row.display_name.toLowerCase().includes(q.toLowerCase())) : ranked).slice(0, 100);
-
-  const [waiting, recent] = await Promise.all([
+  // Leaderboard, "waiting for you" and recent matches load in parallel.
+  const [{ data }, waiting, recent] = await Promise.all([
+    query,
     player ? getMatchesAwaitingPlayer(supabase, player.id) : Promise.resolve([]),
     getRecentConfirmedMatches(supabase, 6),
   ]);
+  const ranked = ((data ?? []) as Player[]).map((row, index) => ({ ...row, rank: index + 1 }));
+  const rows = (q ? ranked.filter((row) => row.display_name.toLowerCase().includes(q.toLowerCase())) : ranked).slice(0, 100);
 
   const scope = city ? `${city}${region ? `, ${regionName(region)}` : ""}` : region ? regionName(region) : "Philippines";
   const chips = [

@@ -24,8 +24,10 @@ export async function proxy(request: NextRequest) {
     },
   });
 
-  // Refreshes an expiring session so Server Components always see a valid one.
-  const { data: { user } } = await supabase.auth.getUser();
+  // Verifies the login token (locally, with Supabase's published signing keys)
+  // and refreshes it when it is about to expire.
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims?.sub ? { id: data.claims.sub } : null;
 
   const { pathname, search } = request.nextUrl;
   if (!user && protectedPrefixes.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`))) {
