@@ -83,7 +83,12 @@ export default async function PlayerPage({ params, searchParams }: PageProps<"/p
             {clubRows.map((c) => <Link key={c.clubs!.id} href={`/clubs/${c.clubs!.id}`} className="rounded-full bg-brand-2 px-3 py-1.5 text-sm font-semibold">{c.clubs!.name}</Link>)}
           </div>
         )}
-        {isMe && <Link href="/profile" className="mt-4 inline-block text-sm font-semibold text-brand-ink-2 md:hidden">Edit profile</Link>}
+        {isMe && (
+          <div className="mt-4 flex gap-4 text-sm font-semibold text-brand-ink-2">
+            <Link href="/profile" className="md:hidden">Edit profile</Link>
+            <Link href="/feedback">Send feedback</Link>
+          </div>
+        )}
       </section>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">

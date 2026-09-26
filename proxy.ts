@@ -4,7 +4,7 @@ import { getSupabaseConfig } from "@/lib/supabase/config";
 
 // Pages that need a signed-in player. Everything else (rankings, profiles,
 // clubs, tournaments, match pages) is public.
-const protectedPrefixes = ["/matches/new", "/profile", "/admin"];
+const protectedPrefixes = ["/matches/new", "/profile", "/admin", "/feedback"];
 
 export async function proxy(request: NextRequest) {
   const config = getSupabaseConfig();

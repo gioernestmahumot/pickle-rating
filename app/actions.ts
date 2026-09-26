@@ -217,6 +217,32 @@ export async function adminResolveMatchAction(_state: ActionState, formData: For
 }
 
 // ---------------------------------------------------------------------------
+// Feedback
+// ---------------------------------------------------------------------------
+
+const FEEDBACK_KINDS = ["suggestion", "problem", "score"] as const;
+
+export async function sendFeedbackAction(_state: ActionState, formData: FormData): Promise<ActionState> {
+  const kind = text(formData, "kind");
+  const message = text(formData, "message");
+  if (!FEEDBACK_KINDS.includes(kind as (typeof FEEDBACK_KINDS)[number])) return { error: "Choose what your feedback is about." };
+  if (message.length < 5) return { error: "Write a little more so we understand." };
+  if (message.length > 1000) return { error: "Keep it under 1000 characters." };
+  const { error } = await callRpc("send_feedback", { p_kind: kind, p_message: message });
+  if (error) return { error };
+  return { message: "sent" };
+}
+
+export async function setFeedbackStatusAction(_state: ActionState, formData: FormData): Promise<ActionState> {
+  const status = text(formData, "status");
+  if (!["new", "seen", "done"].includes(status)) return { error: "Unknown status." };
+  const { error } = await callRpc("admin_set_feedback_status", { p_feedback: optionalId(formData, "feedback"), p_status: status });
+  if (error) return { error };
+  refresh();
+  return {};
+}
+
+// ---------------------------------------------------------------------------
 // Clubs
 // ---------------------------------------------------------------------------
 

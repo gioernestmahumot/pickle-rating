@@ -14,3 +14,9 @@ export async function getSiteOrigin(): Promise<string> {
 export function safeNextPath(value: unknown): string {
   return typeof value === "string" && value.startsWith("/") && !value.startsWith("//") && !value.includes("\\") ? value : "/";
 }
+
+/** Optional public contact link (for example a Facebook page), set with NEXT_PUBLIC_CONTACT_URL. */
+export function getContactUrl(): string | null {
+  const value = process.env.NEXT_PUBLIC_CONTACT_URL?.trim();
+  return value && /^https:\/\/[^\s"<>]+$/.test(value) ? value : null;
+}

@@ -340,3 +340,26 @@ test("helper functions are not callable by clients", async () => {
   await rejects(as(a, "select public.recompute_ratings('singles')"), /permission denied/);
   await rejects(as(a, "select public.advance_bracket($1, $1)", [anyMatch.id]), /permission denied/);
 });
+
+test("feedback: players send it, only admins read it and change its status", async () => {
+  const [player, admin] = [await signUp("Feedback Player"), await signUp("Feedback Admin")];
+  await asSuperuser("update public.players set is_admin = true where id = $1", [admin]);
+  await rejects(as(null, "select public.send_feedback('suggestion', 'Please add a doubles ladder')"), /permission denied/);
+  await rejects(as(player, "select public.send_feedback('other', 'Please add a doubles ladder')"), /Choose what your feedback is about/);
+  await rejects(as(player, "select public.send_feedback('problem', 'hi')"), /Write a little more/);
+  await rejects(as(player, "select public.send_feedback('problem', $1)", ["x".repeat(1001)]), /under 1000/);
+
+  const id = (await as(player, "select public.send_feedback('suggestion', '  Please add a doubles ladder  ') as id"))[0].id;
+  assert.equal((await asSuperuser("select message, status from public.feedback where id = $1", [id]))[0].message, "Please add a doubles ladder");
+  assert.equal((await as(player, "select count(*)::int as n from public.feedback"))[0].n, 0, "players cannot read feedback");
+  await rejects(as(null, "select count(*) from public.feedback"), /permission denied/);
+  assert.equal((await as(admin, "select count(*)::int as n from public.feedback where id = $1", [id]))[0].n, 1, "admins can");
+  await rejects(as(player, "insert into public.feedback (player_id, kind, message) values ($1, 'problem', 'direct insert')", [player]), /permission denied/);
+
+  await rejects(as(player, "select public.admin_set_feedback_status($1, 'done')", [id]), /Admin access/);
+  await as(admin, "select public.admin_set_feedback_status($1, 'done')", [id]);
+  assert.equal((await asSuperuser("select status from public.feedback where id = $1", [id]))[0].status, "done");
+
+  for (let i = 0; i < 4; i += 1) await as(player, "select public.send_feedback('problem', 'Another message here')");
+  await rejects(as(player, "select public.send_feedback('problem', 'One message too many')"), /5 messages a day/);
+});

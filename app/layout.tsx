@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Figtree } from "next/font/google";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { THEME_SCRIPT } from "@/components/theme-toggle";
 import { getSupabaseConfig } from "@/lib/supabase/config";
@@ -31,7 +32,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {getSupabaseConfig() ? (
           <>
             <SiteHeader />
-            <main className="mx-auto w-full max-w-6xl px-4 pt-6 pb-28 md:px-8 md:pt-10 md:pb-16">{children}</main>
+            <main className="mx-auto w-full max-w-6xl px-4 pt-6 pb-12 md:px-8 md:pt-10 md:pb-16">{children}</main>
+            <SiteFooter />
           </>
         ) : (
           <main className="mx-auto max-w-xl px-4 py-16">
