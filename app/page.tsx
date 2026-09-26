@@ -82,6 +82,7 @@ export default async function RankingsPage({ searchParams }: PageProps<"/">) {
 
   return (
     <div className="space-y-6">
+      {one(params.password) === "updated" && <p role="status" className="rounded-xl bg-good-tint px-4 py-3 text-sm text-good">Your password was updated.</p>}
       <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="eyebrow">{scope} · {formatLabel(format)}</p>

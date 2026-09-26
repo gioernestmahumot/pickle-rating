@@ -92,6 +92,32 @@ export async function signInAction(_state: ActionState, formData: FormData): Pro
   redirect(safeNextPath(text(formData, "next")));
 }
 
+/** Emails a reset link. Always answers the same way, so it never reveals which emails have accounts. */
+export async function requestPasswordResetAction(_state: ActionState, formData: FormData): Promise<ActionState> {
+  const email = text(formData, "email").toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "Enter the email you signed up with." };
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${await getSiteOrigin()}/auth/callback?next=/reset-password`,
+  });
+  if (error && /rate limit|too many/i.test(error.message)) return { error: "Too many requests right now. Please try again in a few minutes." };
+  return { message: "If that email has a Pickle Rating account, a reset link is on its way. Check your inbox (and spam folder)." };
+}
+
+export async function setNewPasswordAction(_state: ActionState, formData: FormData): Promise<ActionState> {
+  const password = typeof formData.get("password") === "string" ? String(formData.get("password")) : "";
+  const confirm = typeof formData.get("confirm") === "string" ? String(formData.get("confirm")) : "";
+  if (password.length < 8) return { error: "Use a password of at least 8 characters." };
+  if (password !== confirm) return { error: "The two passwords don't match." };
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "This reset link has expired. Request a new one." };
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) return { error: /same/i.test(error.message) ? "Choose a password different from your old one." : error.message };
+  refresh();
+  redirect("/?password=updated");
+}
+
 export async function signOutAction(): Promise<void> {
   const supabase = await createSupabaseServerClient();
   await supabase.auth.signOut();

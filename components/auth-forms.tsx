@@ -16,7 +16,10 @@ export function SignInForm({ next }: { next: string }) {
         <input id="email" name="email" type="email" className="input" autoComplete="email" required />
       </div>
       <div>
-        <label className="label" htmlFor="password">Password</label>
+        <div className="flex items-baseline justify-between">
+          <label className="label" htmlFor="password">Password</label>
+          <Link href="/forgot-password" className="text-sm font-semibold text-link hover:underline">Forgot password?</Link>
+        </div>
         <input id="password" name="password" type="password" className="input" autoComplete="current-password" required />
       </div>
       <FormMessage state={state} />

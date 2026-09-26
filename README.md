@@ -36,7 +36,8 @@ Elo, calculated in the database (`supabase/migrations`, `apply_match_rating`), s
    ```
 3. **Configure sign-up emails** under Authentication:
    - URL Configuration: set **Site URL** to your site (for example `https://pickle-rating.vercel.app`) and add `https://<your-site>/auth/callback` (and `http://localhost:3000/auth/callback` for local work) to **Redirect URLs**.
-   - Supabase's built-in email sender only allows a few emails per hour. For launch, add your own SMTP provider (Authentication → Emails → SMTP), or turn off "Confirm email" if you are happy to let people in without it.
+     Use `https://<your-site>/**` so both sign-up confirmation and password-reset links (which go to `/auth/callback?next=/reset-password`) are allowed.
+   - Supabase's built-in email sender is for testing only (a few emails per hour, team members only). Add an SMTP provider under Authentication → Emails → SMTP Settings. Brevo's free plan works: host `smtp-relay.brevo.com`, port `587`, your Brevo SMTP login and SMTP key.
 4. **Environment variables**: copy `.env.example` to `.env.local` and fill in the project URL and publishable key (Project Settings → API).
 5. **Run it**:
    ```bash
